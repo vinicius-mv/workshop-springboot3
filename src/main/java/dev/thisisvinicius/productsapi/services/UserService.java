@@ -2,8 +2,10 @@ package dev.thisisvinicius.productsapi.services;
 
 import dev.thisisvinicius.productsapi.entities.User;
 import dev.thisisvinicius.productsapi.repositories.UserRepository;
+import dev.thisisvinicius.productsapi.resources.exceptions.DatabaseException;
 import dev.thisisvinicius.productsapi.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +31,14 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            if (!repository.existsById(id)) {
+                throw new ResourceNotFoundException(id);
+            }
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException dEx) {
+            throw new DatabaseException(dEx.getMessage());
+        }
     }
 
     public User update(Long id, User obj) {
