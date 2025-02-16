@@ -1,5 +1,7 @@
 package dev.thisisvinicius.productsapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -13,7 +15,9 @@ public class Order implements Serializable {
 
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private Long Id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
     @ManyToOne
@@ -23,10 +27,10 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(long id, Instant moment, User client) {
+    public Order(Long id, Instant moment, User client) {
         Id = id;
         this.moment = moment;
-        client = client;
+        this.client = client;
     }
 
     public long getId() {
