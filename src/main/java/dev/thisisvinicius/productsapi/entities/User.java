@@ -11,7 +11,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -24,7 +23,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
-    private List<Order> orders = new ArrayList<Order>();
+    private final List<Order> orders = new ArrayList<Order>();
 
     public User() {
     }
