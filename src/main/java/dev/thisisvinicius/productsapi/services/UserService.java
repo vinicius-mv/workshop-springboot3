@@ -4,6 +4,7 @@ import dev.thisisvinicius.productsapi.entities.User;
 import dev.thisisvinicius.productsapi.repositories.UserRepository;
 import dev.thisisvinicius.productsapi.resources.exceptions.DatabaseException;
 import dev.thisisvinicius.productsapi.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -42,9 +43,13 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException ex) {
+            throw new ResourceNotFoundException(ex.getMessage());
+        }
     }
 
     private void updateData(User entity, User obj) {
